@@ -1,6 +1,12 @@
 export type Product = {
-  id: 'fake';
-  name: 'fake';
-  price: 'fake';
-  orderId: 'fake';
+  id: number;
+  name: string;
+  price: string;
+  orderId: number;
+};
+
+type Code = 201 | 400 | 422;
+export type CreateProduct = {
+  message: string | unknown,
+  code: Code
 };
