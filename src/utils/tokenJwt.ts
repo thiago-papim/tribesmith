@@ -1,10 +1,17 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-// import { PayloadJwt } from '../types/JWT';
+import jwt, { Secret } from 'jsonwebtoken';
+import { PayloadJwt } from '../types/JWT';
 
-const jwtSecret = process.env.JWT_SECRET || 'palavra secreta';
+const jwtSecret: Secret = process.env.JWT_SECRET || 'palavra secreta';
 
-const tokenGenerate = (payload: JwtPayload) : string => jwt.sign(payload, jwtSecret);
+const tokenGenerate = (payload: PayloadJwt) : string => {
+  const token: string = jwt.sign(payload, jwtSecret);
+  return token;
+};
 
-// const verifyToken = (token) => jwt.verify(token, jwtSecret);
+const verifyToken = <T extends PayloadJwt>(token: string): T => {
+  const arrToken = token.split(' ');
+  const decodedToken: T = jwt.verify(arrToken[1], jwtSecret) as T;
+  return decodedToken;
+};
 
-export default { tokenGenerate };
+export default { tokenGenerate, verifyToken };

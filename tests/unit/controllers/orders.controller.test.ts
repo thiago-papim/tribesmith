@@ -25,4 +25,44 @@ describe('OrdersController', function () {
     expect(res.json).to.be.calledWith(allOrders);
   });
 
+  it('Testando create sem userId', async function() {
+    req.body = {
+      productIds: [0]
+    }
+    await orderController.createOrder(req, res);
+    expect(res.status).to.be.calledWith(400);
+    expect(res.json).to.be.calledWith({ message: '"userId" is required' });
+  });
+
+  it('Testando create sem productIds', async function() {
+    req.body = {
+      userId: 1,
+    }
+    await orderController.createOrder(req, res);
+    expect(res.status).to.be.calledWith(400);
+    expect(res.json).to.be.calledWith({ message: '"productIds" is required' });
+  });
+
+  it('Testando create incorreto', async function() {
+    req.body = {
+      userId: 1,
+      productIds: [1, 2]
+    }
+    sinon.stub(orderService, 'createOrder').resolves({ message: '"productIds" must include only numbers', code: 422 })
+    await orderController.createOrder(req, res);
+    expect(res.status).to.be.calledWith(422);
+    expect(res.json).to.be.calledWith({ message: '"productIds" must include only numbers'});
+  });
+
+  it('Testando create correto', async function() {
+    req.body = {
+      userId: 1,
+      productIds: [1, 2]
+    }
+    sinon.stub(orderService, 'createOrder').resolves({ message: { productIds: [1, 2], userId: 1 }, code: 201 })
+    await orderController.createOrder(req, res);
+    expect(res.status).to.be.calledWith(201);
+    expect(res.json).to.be.calledWith({ productIds: [ 1, 2 ], userId: 1 });
+  });
+
 });

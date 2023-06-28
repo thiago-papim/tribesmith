@@ -7,3 +7,9 @@ export type Order = {
   userId: number,
   productIds?: ProductIds[],
 };
+
+type Code = 201 | 404 | 422;
+export type CreateOrder = {
+  message: string | unknown,
+  code: Code
+};

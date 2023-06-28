@@ -4,7 +4,7 @@ import { Login } from '../types/Login';
 import tokenJwt from '../utils/tokenJwt';
 
 const login = async (username: string, password: string) : Promise<Login> => {
-  const newLogin = await UserModel.findOne({ where: { username } });
+  const newLogin = await UserModel.findOne({ where: { username } });  
   if (!newLogin || !bcrypt.compareSync(password, newLogin.dataValues.password)) {
     return { message: 'Username or password invalid', code: 401 };
   }
