@@ -14,6 +14,9 @@ const createProduct = async (req: Request, res: Response) => {
     return res.status(400).json({ message: `"${fields}" is required` });
   }
   const newProduct = await productService.createProduct(name, price, orderId);
+  if (newProduct.code !== 201) {
+    return res.status(newProduct.code).json({ message: newProduct.message });
+  }
   return res.status(newProduct.code).json(newProduct.message);
 };
 
