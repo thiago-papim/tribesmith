@@ -4,6 +4,8 @@ import sinonChai from 'sinon-chai';
 import { Request, Response } from 'express';
 import ProductModel from '../../../src/database/models/product.model';
 import productsController from '../../../src/controllers/products.controller';
+import productService from '../../../src/services/product.service';
+import mockGetAll from '../../mocks/getAllProducts';
 
 chai.use(sinonChai);
 
@@ -17,19 +19,44 @@ describe('ProductsController', function () {
     sinon.restore();
   });
 
-  // it('Testando getAll', async function() {
-  //   const mock = ProductModel.build(
-  //     {
-  //       id: 1,
-  //       name: "Excalibur",
-  //       price: "10 peças de ouro",
-  //       orderId: 1
-  //     },
-  //   )
-  //   sinon.stub(ProductModel, 'findAll').resolves([mock])
-  //   const result = await productsController.allProducts(req , res);
-  //   console.log(result);
-    
-    
-  // })
+  it('Testando create sem name', async function() {
+    req.body = {
+      name: '',
+      price: '123',
+      orderId: 3
+    }
+    await productsController.createProduct(req, res);
+    expect(res.status).to.be.calledWith(400)
+    expect(res.json).to.be
+    .calledWith({ message: '"name" is required' });
+  });
+
+  it('Testando create sem price', async function() {
+    req.body = {
+      name: 'Teste',
+      price: '',
+      orderId: 3
+    }
+    await productsController.createProduct(req, res);
+    expect(res.status).to.be.calledWith(400)
+    expect(res.json).to.be
+    .calledWith({ message: '"price" is required' });
+  });
+
+  it('Testando create correto', async function() {
+    req.body = {
+      name: 'Teste',
+      price: '123',
+      orderId: 3
+    }
+    await productsController.createProduct(req, res);
+    expect(res.status).to.be.calledWith(201)
+  });
+
+  it('Testando getAll', async function() {
+    sinon.stub(ProductModel, 'findAll').resolves(mockGetAll)
+    await productsController.allProducts(req, res);
+    expect(res.status).to.be.calledWith(200);
+    expect(res.json).to.be.calledWith(mockGetAll);
+  });
 });

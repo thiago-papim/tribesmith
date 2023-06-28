@@ -10,6 +10,7 @@ const login = async (username: string, password: string) : Promise<Login> => {
   }
   const { id, username: user } = newLogin.dataValues;
   const token = tokenJwt.tokenGenerate({ id, username: user });
+  
   return { message: token, code: 200 };
 };
 

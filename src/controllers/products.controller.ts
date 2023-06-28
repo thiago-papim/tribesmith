@@ -14,13 +14,11 @@ const createProduct = async (req: Request, res: Response) => {
     return res.status(400).json({ message: `"${fields}" is required` });
   }
   const newProduct = await productService.createProduct(name, price, orderId);
-  console.log(newProduct);
   return res.status(newProduct.code).json(newProduct.message);
 };
 
 const allProducts = async (req: Request, res: Response) => {
   const getAllProducts = await ProductModel.findAll();
-  console.log(getAllProducts);
   
   return res.status(200).json(getAllProducts);
 };
