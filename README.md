@@ -1,4 +1,4 @@
-# Store Manager
+# Trybe Smith
 
 Feito por [Thiago Papim](https://www.linkedin.com/in/thiago-papim/)
 
